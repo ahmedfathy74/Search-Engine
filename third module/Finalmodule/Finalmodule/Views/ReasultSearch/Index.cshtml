@@ -1,0 +1,170 @@
+﻿@model Finalmodule.Models.Finallinks
+@{
+    ViewBag.Title = "Index";
+}
+<head>
+    <title>google</title>
+    <style>
+        .Result {
+            display: none;
+        }
+        .alert{
+            display:none;margin-bottom:0px !important;margin-top:11px;
+        }
+    </style>
+</head>
+
+<h1 style="text-align:center">My Search Engine</h1>
+<br />
+<br />
+<div style="text-align:center;height:85px" class="ttt">
+    
+    <input type="text" placeholder="Search" name="textbox1" value="@Model.searchname" id="txt" style="width:700px;height:33.5px;display: table-cell;vertical-align: middle;max-width:none;border: 1px solid #ccc;padding: 12px 20px;border-radius: 4px;box-sizing: border-box;">
+    <button type="submit" class="btn btn-primary" id="ck">Search</button>
+    <button type="submit" class="btn btn-primary" id="ck1">Soundex</button>
+    <button type="submit" class="btn btn-primary" id="ck2">K-gram</button>
+    <div class="alert alert-warning"><strong>Warning!</strong>  Invaild input,Please try again</div>
+</div>
+@if (Model.boolval == "test")
+{
+    <div class="Result row container" style="display:block">
+        
+        <table class="table">
+            
+            @foreach (var item in Model.Listoflinks)
+            {
+                <tr>
+                    <td>
+                        <a href="@item.Link_Name" >@item.Link_Name</a>
+                    </td>
+
+                </tr>
+            }
+
+            </table>
+
+    </div>
+}
+else if (Model.boolval == "soundexcheck")
+{
+    <div class="Result row container" style="display:block">
+
+        <table class="table">
+
+            @foreach (var item in Model.Listoflinks)
+            {
+                <tr>
+                    <td>
+                        <a href="#" name="@item.Link_Name" id="soundres">Did you mean @item.Link_Name ?</a>
+                    </td>
+
+                </tr>
+            }
+
+        </table>
+
+    </div>
+}
+else if (Model.boolval == "Kgramcheck")
+{
+    <div class="Result row container" style="display:block">
+
+        <table class="table">
+
+            @foreach (var item in Model.Listoflinks)
+            {
+                <tr>
+                    <td>
+                        <a href="#" name="@item.Link_Name" id="soundres">Did you mean @item.Link_Name ?</a>
+                    </td>
+
+                </tr>
+            }
+
+        </table>
+
+    </div>
+}
+else
+{
+    Model.boolval = null;
+
+}
+
+@section Scripts{
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#ck').click(function () {
+            var txtVal = $("#txt").val();
+            if (txtVal == "") {
+                window.location = "@Url.Action("Search", "ReasultSearch")" +
+                             "/" + "emptystring";
+                $(".alert").css('display', 'block');
+                $('.Result').css('display', 'none');
+            }
+            else {
+                window.location = "@Url.Action("Search", "ReasultSearch")" +
+                         "/" + txtVal;
+                $('.Result').css('visibility', 'visible');
+
+            }
+
+        });
+        $('#ck1').click(function () {
+            var txtVal = $("#txt").val();
+            if (txtVal == "") {
+                var se = window.location.search;
+
+                if (se != "") {
+                    window.location = "@Url.Action("Soundex", "ReasultSearch")" +
+                             "/" + "emptystring";
+                    $(".alert").css('display', 'block');
+                    $('.Result').css('display', 'none');
+                }
+                else {
+                    $(".alert").css('display', 'block');
+                    $('.Result').css('display', 'none');
+                }
+
+
+            }
+            else {
+                window.location = "@Url.Action("Soundex", "ReasultSearch")" +
+                         "/" + txtVal;
+                $('.Result').css('visibility', 'visible');
+
+            }
+
+        });
+        $('#ck2').click(function () {
+            var txtVal = $("#txt").val();
+            if (txtVal == "") {
+                var se = window.location.search;
+
+                if (se != "") {
+                    window.location = "@Url.Action("Trigram", "ReasultSearch")";
+                    $(".alert").css('display', 'block');
+                    $('.Result').css('display', 'none');
+                }
+                else {
+                    $(".alert").css('display', 'block');
+                    $('.Result').css('display', 'none');
+                }
+            }
+            else {
+                window.location = "@Url.Action("Trigram", "ReasultSearch")" +
+                         "/" + txtVal;
+                $('.Result').css('visibility', 'visible');
+
+            }
+        });
+        $('#soundres').click(function () {
+            var valuelink = $('#soundres').attr('name');
+            var path = "/ReasultSearch/Search";
+            window.location = path +
+                     "/" + valuelink;
+            $('.Result').css('visibility', 'visible');
+        });
+    });
+</script>
+  }
